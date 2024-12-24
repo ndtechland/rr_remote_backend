@@ -1,0 +1,77 @@
+﻿@model RR_Remote.Models.DTO.BannerDTO
+@{
+    ViewData["Title"] = "Banner";
+    Layout = "~/Areas/Admin/Views/Shared/_Adminlayout.cshtml";
+}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Banner/</span> Add Banner</h4>
+
+    <!-- Basic Layout -->
+    <div class="row">
+        <div class="col-xl">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">@ViewBag.Heading</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["msg"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["msg"]</div>
+                    }
+                    @if (TempData["errormsg"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["errormsg"]</div>
+                    }
+                    <form action="Banner" method="post" enctype="multipart/form-data">
+                        @Html.HiddenFor(a => a.Id, new { @class = "form-control" })
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-default-company">Title</label>
+                            @Html.TextBoxFor(a => a.Title, new { @class = "form-control", placeholder = "Enter Banner Title", @required = "" })
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-default-company">Banner Image</label>
+                            @Html.TextBoxFor(a => a.ImageFile, new { @class = "form-control", type = "file" })
+                        </div>
+                        <button type="submit" class="btn btn-primary">@ViewBag.BtnTXT</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Hoverable Table rows -->
+    <div class="card">
+        <h5 class="card-header">Brand List</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Banner Image</th>
+                        <th>Title</th>
+                        <th>Create Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.BannerList)
+                    {
+                        <tr>
+                            <td><img src="~/Images/@item.BannerImage" style="width:100px;" alt="Avatar" class="rounded-circle"></td>
+                            <td>@item.Title</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <a href="/Admin/Banner/Banner?Id=@item.Id" class="btn btn-primary">Edit</a>
+                                <a href="/Admin/Banner/BannerDelete?Id=@item.Id" class="btn btn-danger" onclick="return confirm('Are you sure want to delete?')">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+
+</div>

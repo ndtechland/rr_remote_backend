@@ -1,0 +1,91 @@
+﻿@model RR_Remote.Models.DTO.BrandDTO
+@{
+    ViewData["Title"] = "Brands";
+    Layout = "~/Areas/Admin/Views/Shared/_Adminlayout.cshtml";
+}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Brands/</span> Add Brands</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">@ViewBag.Heading</h5>
+                </div>
+                <div class="card-body">
+                    @if(TempData["msg"]!=null)
+                    {
+                        <div class="alert alert-success">@TempData["msg"]</div>
+                    }
+                    @if (TempData["errormsg"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["errormsg"]</div>
+                    }
+                    <form action="Brands" method="post" enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Name</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" class="form-control" value="@ViewBag.Id" name="Id" id="basic-default-name" placeholder="Enter Brand Name" required />
+                                <input type="text" class="form-control" value="@ViewBag.BrandName" name="BrandName" id="basic-default-name" placeholder="Enter Brand Name" required />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Image</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(a => a.ImageFile, new { @class = "form-control", type = "file" })
+
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">@ViewBag.btnText</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Hoverable Table rows -->
+    <div class="card">
+        <h5 class="card-header">Brand List</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Brand Name</th>
+                        <th>Create Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.BrandList)
+                    {
+                        <tr>
+                            <td><img src="~/Images/@item.Image" style="width:100px;" alt="Avatar" class="rounded-circle"></td>
+                            <td>@item.BrandName</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <a href="/Admin/Home/Brands?Id=@item.Id" class="btn btn-primary">Edit</a>
+                                <a href="/Admin/Home/BrandDelete?Id=@item.Id" class="btn btn-danger" onclick="return confirm('Are you sure want to delete?')">Delete</a>
+                            </td>
+                        </tr>
+                    }                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+
+</div>
+<!-- / Content -->

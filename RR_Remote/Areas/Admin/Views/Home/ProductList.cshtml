@@ -1,0 +1,52 @@
+﻿@model RR_Remote.Models.DTO.ProductDTO
+@{
+    ViewData["Title"] = "ProductList";
+    Layout = "~/Areas/Admin/Views/Shared/_Adminlayout.cshtml";
+}
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Hoverable Table rows -->
+    <div class="card">
+        <h5 class="card-header">Product List</h5>
+        @if (TempData["msg"] != null)
+        {
+            <div class="alert alert-success">@TempData["msg"]</div>
+        }
+        @if (TempData["errormsg"] != null)
+        {
+            <div class="alert alert-danger">@TempData["errormsg"]</div>
+        }
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Image</th>
+                        <th>Product Name</th>
+                        <th>Brand Name</th>
+                        <th>Category Name</th>
+                        <th>Create Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td><img src="~/Images/@item.ProductImage" style="width:100px;" alt="Avatar" class="rounded-circle"></td>
+                            <td>@item.ProductName</td>
+                            <td>@item.BrandName</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <a href="/Admin/Home/Products?Id=@item.Id" class="btn btn-primary">Edit</a>
+                                <a href="/Admin/Home/ProductDelete?Id=@item.Id" class="btn btn-danger" onclick="return confirm('Are you sure want to delete?')">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+
+</div>
