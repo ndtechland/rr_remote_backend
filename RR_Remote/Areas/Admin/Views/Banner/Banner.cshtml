@@ -4,8 +4,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_Adminlayout.cshtml";
 }
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Banner/</span> Add Banner</h4>
-
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Master Enteries/</span> Add Banner</h4>
     <!-- Basic Layout -->
     <div class="row">
         <div class="col-xl">
@@ -30,7 +29,12 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-company">Banner Image</label>
+                            
                             @Html.TextBoxFor(a => a.ImageFile, new { @class = "form-control", type = "file" })
+                            @if (!string.IsNullOrEmpty(Model.BannerImage))
+                            {
+                                <a href="/Images/@Model.BannerImage"> <img class="thumb" src="/Images/@Model.BannerImage" style="width:100px;" /></a>
+                            }
                         </div>
                         <button type="submit" class="btn btn-primary">@ViewBag.BtnTXT</button>
                     </form>
@@ -44,7 +48,7 @@
 
     <!-- Hoverable Table rows -->
     <div class="card">
-        <h5 class="card-header">Brand List</h5>
+        <h5 class="card-header">Banner List</h5>
         <div class="table-responsive text-nowrap">
             <table class="table table-hover">
                 <thead>
@@ -59,7 +63,7 @@
                     @foreach (var item in Model.BannerList)
                     {
                         <tr>
-                            <td><img src="~/Images/@item.BannerImage" style="width:100px;" alt="Avatar" class="rounded-circle"></td>
+                            <td><a href="~/Images/@item.BannerImage"> <img src="~/Images/@item.BannerImage" style="width:100px;" alt="Avatar" class="rounded-circle"></a></td>
                             <td>@item.Title</td>
                             <td>@item.CreatedDate</td>
                             <td>

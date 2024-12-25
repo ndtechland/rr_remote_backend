@@ -52,6 +52,10 @@
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-company">Product Image</label>
                             @Html.TextBoxFor(a => a.ImageFile, new { @class = "form-control", type = "file" })
+                            @if (!string.IsNullOrEmpty(Model.ProductImage))
+                            {
+                                <a href="/Images/@Model.ProductImage"> <img class="thumb" src="/Images/@Model.ProductImage" style="width:100px;" /></a>
+                            }
                         </div>
                         <button type="submit" class="btn btn-primary">@ViewBag.BtnTXT</button>
                     </form>

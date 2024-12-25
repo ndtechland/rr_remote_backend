@@ -7,6 +7,7 @@ using RR_Remote.Services.Contract;
 using RR_Remote.Services.ContractApi;
 using RR_Remote.Services.Implementation;
 using RR_Remote.Services.ImplementationApi;
+using RR_Remote.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddScoped<IBanner, BannerImplementation>();
 builder.Services.AddScoped<IAccount, AccountImplementation>();
 builder.Services.AddScoped<IProduct, ProductImplementation>();
 builder.Services.AddScoped<ICommon, CommonImplementation>();
+builder.Services.AddSingleton<EmailOperation>();
 var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(connectionString));

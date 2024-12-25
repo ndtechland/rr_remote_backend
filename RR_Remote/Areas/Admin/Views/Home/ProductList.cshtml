@@ -32,7 +32,7 @@
                     @foreach (var item in Model.Products)
                     {
                         <tr>
-                            <td><img src="~/Images/@item.ProductImage" style="width:100px;" alt="Avatar" class="rounded-circle"></td>
+                            <td><a href="~/Images/@item.ProductImage"><img src="~/Images/@item.ProductImage" style="width:100px;" alt="Avatar" class="rounded-circle"></a></td>
                             <td>@item.ProductName</td>
                             <td>@item.BrandName</td>
                             <td>@item.CategoryName</td>
