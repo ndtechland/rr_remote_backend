@@ -1,5 +1,5 @@
 ﻿<!-- Menu -->
-
+@* 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="/Admin/Home/Dashboard" class="app-brand-link">
@@ -93,5 +93,141 @@
 
     </ul>
 </aside>
+ *@
+
+
+<!-- Menu -->
+<style>
+    .menu-item.active > a {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    .menu-item.active > .menu-sub {
+        display: block !important;
+    }
+
+    .menu-sub {
+        display: none;
+    }
+
+</style>
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+        <a href="/Admin/Home/Dashboard" class="app-brand-link">
+            <span class="app-brand-logo demo">
+                <img src="~/assets/img/logo/cropped-rr-logo-1.jpg" style="width:80px;" />
+            </span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RR Remote</span>
+        </a>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Dashboard -->
+        <li class="menu-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Dashboard" ? "active" : "")">
+            <a href="/Admin/Home/Dashboard" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+            </a>
+        </li>
+
+        <!-- Master Entries -->
+        <li class="menu-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Banner" ? "active" : "")">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Layouts">Master Enteries</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Banner" ? "active" : "")">
+                    <a href="/Admin/Banner/Banner" class="menu-link">
+                        <div data-i18n="Without menu">Add Banner</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Brands -->
+        <li class="menu-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Brands" ? "active" : "")">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Layouts">Brands</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Brands" ? "active" : "")">
+                    <a href="/Admin/Home/Brands" class="menu-link">
+                        <div data-i18n="Without menu">Add Brand</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Category -->
+        <li class="menu-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Category" ? "active" : "")">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Layouts">Category</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Category" ? "active" : "")">
+                    <a href="/Admin/Home/Category" class="menu-link">
+                        <div data-i18n="Without menu">Add Categories</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Products -->
+        <li class="menu-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Products" ? "active" : "")">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Layouts">Products</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Products" ? "active" : "")">
+                    <a href="/Admin/Home/Products" class="menu-link">
+                        <div data-i18n="Without menu">Add Products</div>
+                    </a>
+                </li>
+                <li class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ProductList" ? "active" : "")">
+                    <a href="/Admin/Home/ProductList" class="menu-link">
+                        <div data-i18n="Without menu">Product List</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const currentUrl = window.location.pathname.toLowerCase();
+        const menuItems = document.querySelectorAll(".menu-inner .menu-item > a");
+
+        menuItems.forEach(item => {
+            const href = item.getAttribute("href").toLowerCase();
+            if (href === currentUrl) {
+                const menuItem = item.closest(".menu-item");
+                menuItem.classList.add("active");
+
+                // If it's a submenu item, expand the parent
+                const parentSubmenu = menuItem.closest(".menu-sub");
+                if (parentSubmenu) {
+                    parentSubmenu.style.display = "block";
+                    const toggleLink = parentSubmenu.previousElementSibling;
+                    if (toggleLink) {
+                        toggleLink.classList.add("active");
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+
+
 
 <!-- / Menu -->

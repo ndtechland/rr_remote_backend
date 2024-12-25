@@ -9,5 +9,6 @@ namespace RR_Remote.Services.ContractApi
         Task<bool> AddUser(User model);
         Task<bool> ChangePass(ChangePassword model);
         Task<User> GetProfileDetail(int userId);
+        Task<bool> ForgotPass(ForgotPasswordDTO model,string rendompass);
     }
 }

@@ -8,6 +8,9 @@ using RR_Remote.Models.DTO;
 using RR_Remote.Models.Entity;
 using RR_Remote.Services.ContractApi;
 using RR_Remote.Utilities;
+using System;
+using static RR_Remote.Utilities.EmailOperation;
+using static System.Net.WebRequestMethods;
 
 namespace RR_Remote.Areas.App.Controllers
 {
@@ -18,10 +21,14 @@ namespace RR_Remote.Areas.App.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IAccount _account;
-        public AccountController(AppDbContext context, IAccount account)
+        private readonly EmailOperation _email;
+        private readonly CommonOperations _random = new CommonOperations();
+
+        public AccountController(AppDbContext context, IAccount account, EmailOperation email)
         {
             _context = context;
             _account = account;
+            _email = email;
         }
 
         [HttpPost]
@@ -196,6 +203,48 @@ namespace RR_Remote.Areas.App.Controllers
                 response.Message = $"An unexpected error occurred: {ex.Message}";
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        {
+            var response = new Response<ForgotPasswordDTO>();
+            var rendompass = _random.GenerateRandomPassword();
+
+            bool isCreated = await _account.ForgotPass(model, rendompass);
+            if(isCreated)
+            {
+                EmailEF ef = new EmailEF()
+                {
+                    Email = model.Email,
+                    Subject = "Forgot Password",
+
+                    Message = @"<!DOCTYPE html>
+<html>
+<head>
+    <title>Change password request.</title>
+</head>
+<body> 
+    
+    <ul>
+        <li><strong>Your new password is:</strong> " + rendompass + @"</li> 
+    </ul>
+    <p>You can now login with your new password.</p>
+</body>
+</html>"
+                };
+                _email.SendEmail(ef);
+
+                return Ok(new { Status = 200, Message = "Check your email for your new password. You can now log in with it" });
+            }
+            else
+            {
+                response.Succeeded = false;
+                response.StatusCode = StatusCodes.Status404NotFound;
+                response.Status = "Failed";
+                response.Message = "User not found.";
+                return BadRequest(response);
+            }
+            
         }
 
     }

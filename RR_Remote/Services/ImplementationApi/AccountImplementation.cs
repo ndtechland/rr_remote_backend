@@ -4,12 +4,16 @@ using RR_Remote.Models.ApiDTO;
 using RR_Remote.Models.DTO;
 using RR_Remote.Models.Entity;
 using RR_Remote.Services.ContractApi;
+using RR_Remote.Utilities;
+using System;
 
 namespace RR_Remote.Services.ImplementationApi
 {
     public class AccountImplementation:IAccount
     {
         private readonly AppDbContext _context;
+        private readonly CommonOperations _random = new CommonOperations();
+
         public AccountImplementation(AppDbContext context)
         {
             _context = context;
@@ -104,6 +108,29 @@ namespace RR_Remote.Services.ImplementationApi
                 data.Password = model.Password;
                 _context.SaveChanges();
                 return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<bool> ForgotPass(ForgotPasswordDTO model,string rendompass)
+        {
+            try
+            {
+                var data = _context.Users.Where(a => a.Email == model.Email).FirstOrDefault();
+                if(data!=null)
+                {
+                    data.Password = rendompass;
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
             catch (Exception)
             {

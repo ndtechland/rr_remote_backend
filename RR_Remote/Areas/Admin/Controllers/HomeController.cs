@@ -174,6 +174,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                 int iId = (int)(id == null ? 0 : id);
                 ViewBag.Id = 0;
                 ViewBag.BrandName = "";
+                ViewBag.Image = "";
                 ViewBag.heading = "Add Brand";
                 ViewBag.btnText = "SAVE";
                 if (iId != null && iId != 0)
@@ -183,6 +184,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                     {
                         ViewBag.id = data.Id;
                         ViewBag.BrandName = data.BrandName;
+                        ViewBag.Image = data.Image;
                         ViewBag.btnText = "UPDATE";
                         ViewBag.Heading = "Update Brand";
 
@@ -267,6 +269,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                     var existdata = _context.Products.Where(x => x.Id == id).FirstOrDefault();
                     model.Id = existdata.Id;
                     model.ProductName = existdata.ProductName;
+                    model.ProductImage = existdata.ProductImage;
                     model.Description = existdata.Description;
                     model.ProductImage = existdata.ProductImage;
                     model.CategoryId = existdata.CategoryId;
@@ -378,6 +381,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                 int iId = (int)(id == null ? 0 : id);
                 ViewBag.Id = 0;
                 model.CategoryName = "";
+                model.Image = "";
                 model.BrandId = 0;
                 ViewBag.heading = "Add Category";
                 ViewBag.btnText = "SAVE";
@@ -388,6 +392,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                     {
                         ViewBag.id = data.Id;
                         model.CategoryName = data.CategoryName;
+                        model.Image = data.Image;
                         model.BrandId = data.BrandId;
                         ViewBag.btnText = "UPDATE";
                         ViewBag.Heading = "Update Category";
