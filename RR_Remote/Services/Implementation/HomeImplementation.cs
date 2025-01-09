@@ -323,6 +323,7 @@ namespace RR_Remote.Services.Implementation
                             join p in _context.Products on o.ProductId equals p.Id
                             join b in _context.Brands on p.BrandId equals b.Id
                             join c in _context.CategoryMasters on p.CategoryId equals c.Id
+                            where o.IsOrder==true
                             orderby o.Id descending
                             select new OrderList
                             {
