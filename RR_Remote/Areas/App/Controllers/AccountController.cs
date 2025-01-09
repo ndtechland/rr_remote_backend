@@ -208,17 +208,20 @@ namespace RR_Remote.Areas.App.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
         {
             var response = new Response<ForgotPasswordDTO>();
-            var rendompass = _random.GenerateRandomPassword();
-
-            bool isCreated = await _account.ForgotPass(model, rendompass);
-            if(isCreated)
+            if (model.Email!="")
             {
-                EmailEF ef = new EmailEF()
-                {
-                    Email = model.Email,
-                    Subject = "Forgot Password",
+                
+                var rendompass = _random.GenerateRandomPassword();
 
-                    Message = @"<!DOCTYPE html>
+                bool isCreated = await _account.ForgotPass(model, rendompass);
+                if (isCreated)
+                {
+                    EmailEF ef = new EmailEF()
+                    {
+                        Email = model.Email,
+                        Subject = "Forgot Password",
+
+                        Message = @"<!DOCTYPE html>
 <html>
 <head>
     <title>Change password request.</title>
@@ -231,19 +234,29 @@ namespace RR_Remote.Areas.App.Controllers
     <p>You can now login with your new password.</p>
 </body>
 </html>"
-                };
-                _email.SendEmail(ef);
+                    };
+                    _email.SendEmail(ef);
 
-                return Ok(new { Status = 200, Message = "Check your email for your new password. You can now log in with it" });
+                    return Ok(new { Status = 200, Message = "Check your email for your new password. You can now log in with it" });
+                }
+                else
+                {
+                    response.Succeeded = false;
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.Status = "Failed";
+                    response.Message = "User not found.";
+                    return NotFound(response);
+                }
             }
             else
             {
                 response.Succeeded = false;
                 response.StatusCode = StatusCodes.Status404NotFound;
                 response.Status = "Failed";
-                response.Message = "User not found.";
-                return BadRequest(response);
+                response.Message = "Please enter your email id.";
+                return NotFound(response);
             }
+            
             
         }
 

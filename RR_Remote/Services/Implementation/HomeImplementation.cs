@@ -15,6 +15,8 @@ namespace RR_Remote.Services.Implementation
         {
             _context = context;
         }
+
+        //brand is category and category is brand
         public async Task<bool> AddUpdateBrand(BrandDTO model)
         {
             try
@@ -60,7 +62,7 @@ namespace RR_Remote.Services.Implementation
         {
             try
             {
-                var data = _context.Brands.Where(x => x.IsActive).ToList();
+                var data = _context.Brands.Where(x => x.IsActive).OrderByDescending(x=>x.Id).ToList();
                 return data;
             }
             catch (Exception)
@@ -73,7 +75,7 @@ namespace RR_Remote.Services.Implementation
         {
             try
             {
-                var data = _context.Brands.Find(id);
+                var data = _context.CategoryMasters.Find(id);
                 data.IsActive = false;
                 _context.SaveChanges();
                 return true;
@@ -95,6 +97,7 @@ namespace RR_Remote.Services.Implementation
                         var data = new Product()
                         {
                             ProductName = model.ProductName,
+                            ProductPrice = model.ProductPrice,
                             Description = model.Description,
                             ProductImage = model.ProductImage,
                             CategoryId = model.CategoryId,
@@ -109,6 +112,7 @@ namespace RR_Remote.Services.Implementation
                     {
                         var data = _context.Products.Find(model.Id);
                         data.ProductName = model.ProductName;
+                        data.ProductPrice = model.ProductPrice;
                         if (model.ProductImage != null)
                         {
                             data.ProductImage = model.ProductImage;
@@ -152,7 +156,7 @@ namespace RR_Remote.Services.Implementation
             {
                 var data = (from p in _context.Products
                             join b in _context.Brands on p.BrandId equals b.Id
-                            join c in _context.Brands on p.CategoryId equals c.Id
+                            join c in _context.CategoryMasters on p.CategoryId equals c.Id
                             where p.IsActive
                             orderby p.Id descending
                             select new ProductDetails
@@ -160,10 +164,11 @@ namespace RR_Remote.Services.Implementation
                                 Id = p.Id,
                                 ProductImage = p.ProductImage,
                                 ProductName = p.ProductName,
+                                ProductPrice = p.ProductPrice,
                                 IsActive = p.IsActive,
                                 CreatedDate = p.CreatedDate,
                                 BrandName = b.BrandName,
-                                CategoryName = c.BrandName
+                                CategoryName = c.CategoryName
 
                             }
                           ).ToList();
@@ -248,7 +253,7 @@ namespace RR_Remote.Services.Implementation
         {
             try
             {
-                var data = _context.CategoryMasters.Find(id);
+                var data = _context.Brands.Find(id);
                 data.IsActive = false;
                 _context.SaveChanges();
                 return true;
@@ -300,7 +305,41 @@ namespace RR_Remote.Services.Implementation
         {
             try
             {
-                var data = _context.Users.Where(x=>x.IsActive).ToList();
+                var data = _context.Users.Where(x=>x.IsActive).OrderByDescending(x=>x.Id).ToList();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<List<OrderList>> GetOrders()
+        {
+            try
+            {
+                var data = (from o in _context.Orders
+                            join u in _context.Users on o.UserId equals u.Id
+                            join p in _context.Products on o.ProductId equals p.Id
+                            join b in _context.Brands on p.BrandId equals b.Id
+                            join c in _context.CategoryMasters on p.CategoryId equals c.Id
+                            orderby o.Id descending
+                            select new OrderList
+                            {
+                                Id = o.Id,
+                                UserName = u.Name,
+                                Mobile = u.MobileNumber,
+                                Email = u.Email,
+                                ProductName = p.ProductName,
+                                ProductImage = p.ProductImage,
+                                ProductPrice = p.ProductPrice,
+                                Qty = o.Qty,
+                                TotalPrice = p.ProductPrice * o.Qty,
+                                Brand = b.BrandName,
+                                Category = c.CategoryName,
+                                OrderDate = o.OrderDate
+                            }
+                          ).ToList();
                 return data;
             }
             catch (Exception)

@@ -14,6 +14,7 @@ namespace RR_Remote.Context
         public DbSet<AdminLogin> AdminLogins { get; set; }
         public DbSet<CategoryMaster> CategoryMasters { get; set; }
         public DbSet<BannerMaster> BannerMasters { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

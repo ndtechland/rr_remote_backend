@@ -27,16 +27,16 @@
                         @Html.HiddenFor(a => a.Id, new { @class = "form-control" })
 
                         <div class="mb-3">
-                            <label class="form-label" for="basic-default-fullname">Brand</label>
-                            @Html.DropDownListFor(a => a.BrandId, Model.Brands, "Select Brand", new { @class = "form-control", @required = "required" })
+                            <label class="form-label" for="basic-default-fullname">Category</label>
+                            @Html.DropDownListFor(a => a.BrandId, Model.Brands, "Select Category", new { @class = "form-control", @required = "required" })
                             <span class="text-danger">
                                 @Html.ValidationMessageFor(a => a.BrandId)
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="basic-default-fullname">Category</label>
+                            <label class="form-label" for="basic-default-fullname">Brand</label>
                             <input class="form-control" value="@Model.CategoryId" id="cat_id" type="hidden"/>
-                            @Html.DropDownListFor(a => a.CategoryId, Enumerable.Empty<SelectListItem>(), "Select Category", new { @class = "form-control", @required = "required" })
+                            @Html.DropDownListFor(a => a.CategoryId, Enumerable.Empty<SelectListItem>(), "Select Brand", new { @class = "form-control", @required = "required" })
                             <span class="text-danger">
                                 @Html.ValidationMessageFor(a => a.CategoryId)
                             </span>
@@ -44,6 +44,10 @@
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-company">Product Name</label>
                             @Html.TextBoxFor(a => a.ProductName, new { @class = "form-control", placeholder = "Enter Product Name", @required = "" })
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-default-company">Product Price</label>
+                            @Html.TextBoxFor(a => a.ProductPrice, new { @class = "form-control", placeholder = "Enter Product Price eg. 300", @required = "" })
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-company">Description</label>
@@ -73,7 +77,7 @@
         $.get('/Admin/Common/GetCategoryByBrand?brandId=' + id, function (r) {
             var dd = $("#CategoryId");
             dd.empty();
-            dd.append('<option value="">Select Category</option>');
+            dd.append('<option value="">Select Brand</option>');
             $.each(r, function (k, v) {
                 dd.append('<option value="' + v.id + '">' + v.categoryName + '</option>');
 
@@ -86,7 +90,7 @@
         $.get('/Admin/Common/GetCategoryByBrand?brandId=' + id, function (r) {
             var dd = $("#CategoryId");
             dd.empty();
-            dd.append('<option value="">Select Category</option>');
+            dd.append('<option value="">Select Brand</option>');
             $.each(r, function (k, v) {
                 dd.append('<option value="' + v.id + '">' + v.categoryName + '</option>');
 

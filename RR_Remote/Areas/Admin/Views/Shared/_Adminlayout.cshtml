@@ -44,6 +44,24 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="~/assets/js/config.js"></script>
+    <style>
+        .table > thead {
+            background-color: antiquewhite;
+        }
+
+        .bg-menu-theme .menu-inner > .menu-item.active > .menu-link {
+    color: #0b0b0b;
+    background-color: rgb(177 16 22 / 71%) !important;
+}
+.bg-menu-theme .menu-inner > .menu-item.active:before {
+    background: #b01016;
+}
+
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle):before {
+    background-color: #b11016 !important;
+    border: 3px solid #ffe7eb !important;
+}
+    </style>
 </head>
 
 <body>
