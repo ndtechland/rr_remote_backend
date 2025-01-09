@@ -6,6 +6,8 @@
         public int UserId { get; set; }
         public int ProductId { get; set; }
         public int Qty { get; set; }
+        public bool IsOrder { get; set; }
+        public DateTime CheckoutDate { get; set; }
         public DateTime OrderDate { get; set; }
     }
 }

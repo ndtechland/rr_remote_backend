@@ -12,7 +12,7 @@ namespace RR_Remote.Services.ImplementationApi
         {
             _context = context;
         }
-        public async Task<bool> Order(OrderDTO model)
+        public async Task<int> Order(OrderDTO model)
         {
             try
             {
@@ -21,11 +21,12 @@ namespace RR_Remote.Services.ImplementationApi
                     UserId = model.UserId,
                     ProductId = model.ProductId,
                     Qty = model.Qty,
-                    OrderDate = DateTime.Now
+                    IsOrder = false,
+                    CheckoutDate = DateTime.Now
                 };
                  _context.Add(data);
                 _context.SaveChanges();
-                return true;
+                return data.Id;
             }
             catch (Exception)
             {
@@ -41,7 +42,7 @@ namespace RR_Remote.Services.ImplementationApi
                             join p in _context.Products on o.ProductId equals p.Id
                             join b in _context.Brands on p.BrandId equals b.Id
                             join c in _context.CategoryMasters on p.CategoryId equals c.Id
-                            where o.UserId== UserId
+                            where o.UserId== UserId && o.IsOrder==true
                             orderby o.Id descending
                             select new OrderHistory
                             {
@@ -57,6 +58,37 @@ namespace RR_Remote.Services.ImplementationApi
                             }
                           ).ToList();
                 return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<bool> OrderPlace(PlaceOrder model)
+        {
+            try
+            {
+                var orderinfo = _context.Orders.Find(model.OrderId);
+                var dd = _context.Orders.Where(o=>o.UserId==model.UserId && o.IsOrder==false).FirstOrDefault();
+                
+                if (orderinfo != null)
+                {
+                    orderinfo.IsOrder = true;
+                    orderinfo.OrderDate = DateTime.Now;
+                    _context.SaveChanges();
+                   
+                    if (dd.UserId == model.UserId && dd.IsOrder==false)
+                    {                        
+                        _context.Orders.Remove(dd);  
+                        _context.SaveChanges(); 
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
