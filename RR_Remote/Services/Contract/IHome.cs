@@ -17,5 +17,6 @@ namespace RR_Remote.Services.Contract
         Task<bool> Login(LoginDTO login);
         Task<bool> ChangePassword(ChangePasswordDTO model);
         Task<List<User>> GetUsers();
+        Task<List<OrderList>> GetOrders();
     }
 }

@@ -22,6 +22,7 @@ builder.Services.AddScoped<IBanner, BannerImplementation>();
 builder.Services.AddScoped<IAccount, AccountImplementation>();
 builder.Services.AddScoped<IProduct, ProductImplementation>();
 builder.Services.AddScoped<ICommon, CommonImplementation>();
+builder.Services.AddScoped<IOrder, OrderImplementation>();
 builder.Services.AddSingleton<EmailOperation>();
 var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<AppDbContext>(options => 

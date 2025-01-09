@@ -156,6 +156,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                 ViewBag.BrandCount = _context.Brands.Where(x=>x.IsActive).Count();
                 ViewBag.CategoryCount = _context.CategoryMasters.Where(x=>x.IsActive).Count();
                 ViewBag.ProductCount = _context.Products.Where(x=>x.IsActive).Count();
+                ViewBag.OrderCount = _home.GetOrders().Result.Count();
                 return View();
             }
             catch (Exception)
@@ -169,22 +170,26 @@ namespace RR_Remote.Areas.Admin.Controllers
         {
             try
             {
-                var model = new BrandDTO();
-                model.BrandList = await _home.GetBrands();
+                var model = new CategoryDTO();
+                model.Brands = new SelectList(_context.Brands.Where(a => a.IsActive).ToList(), "Id", "BrandName");
+
+                model.CategoryList = await _home.GetCategories();
                 int iId = (int)(id == null ? 0 : id);
                 ViewBag.Id = 0;
-                ViewBag.BrandName = "";
-                ViewBag.Image = "";
+                model.CategoryName = "";
+                model.Image = "";
+                model.BrandId = 0;
                 ViewBag.heading = "Add Brand";
                 ViewBag.btnText = "SAVE";
                 if (iId != null && iId != 0)
                 {
-                    var data = _context.Brands.Find(iId);
+                    var data = _context.CategoryMasters.Find(iId);
                     if (data != null)
                     {
                         ViewBag.id = data.Id;
-                        ViewBag.BrandName = data.BrandName;
-                        ViewBag.Image = data.Image;
+                        model.CategoryName = data.CategoryName;
+                        model.Image = data.Image;
+                        model.BrandId = data.BrandId;
                         ViewBag.btnText = "UPDATE";
                         ViewBag.Heading = "Update Brand";
 
@@ -196,9 +201,10 @@ namespace RR_Remote.Areas.Admin.Controllers
             {
                 throw;
             }
+            
         }
         [HttpPost]
-        public async Task<IActionResult> Brands(BrandDTO model, IFormCollection model1)
+        public async Task<IActionResult> Brands(CategoryDTO model, IFormCollection model1)
         {
             try
             {
@@ -215,7 +221,7 @@ namespace RR_Remote.Areas.Admin.Controllers
 
                     model.Image = uploadResult;
                 }
-                bool isCreated = await _home.AddUpdateBrand(model);
+                bool isCreated = await _home.AddUpdateCategory(model);
                 if (isCreated)
                 {
                     TempData["msg"] = model.Id > 0
@@ -234,6 +240,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                 ModelState.AddModelError("", $"An error occurred: {ex.Message}");
                 return View(model);
             }
+            
         }
         public async Task<IActionResult> BrandDelete(int id)
         {
@@ -269,6 +276,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                     var existdata = _context.Products.Where(x => x.Id == id).FirstOrDefault();
                     model.Id = existdata.Id;
                     model.ProductName = existdata.ProductName;
+                    model.ProductPrice = existdata.ProductPrice;
                     model.ProductImage = existdata.ProductImage;
                     model.Description = existdata.Description;
                     model.ProductImage = existdata.ProductImage;
@@ -284,6 +292,7 @@ namespace RR_Remote.Areas.Admin.Controllers
                     model.CategoryId     = 0;
                     model.BrandId = 0;
                     model.ProductImage = "";
+                    model.ProductPrice = 0;
                     model.ProductName = "";
                     model.Description = "";
                     ViewBag.BtnTXT = "Save";
@@ -374,26 +383,22 @@ namespace RR_Remote.Areas.Admin.Controllers
         {
             try
             {
-                var model = new CategoryDTO();
-                model.Brands = new SelectList(_context.Brands.Where(a => a.IsActive).ToList(), "Id", "BrandName");
-
-                model.CategoryList = await _home.GetCategories();
+                var model = new BrandDTO();
+                model.BrandList = await _home.GetBrands();
                 int iId = (int)(id == null ? 0 : id);
                 ViewBag.Id = 0;
-                model.CategoryName = "";
-                model.Image = "";
-                model.BrandId = 0;
+                ViewBag.BrandName = "";
+                ViewBag.Image = "";
                 ViewBag.heading = "Add Category";
                 ViewBag.btnText = "SAVE";
                 if (iId != null && iId != 0)
                 {
-                    var data = _context.CategoryMasters.Find(iId);
+                    var data = _context.Brands.Find(iId);
                     if (data != null)
                     {
                         ViewBag.id = data.Id;
-                        model.CategoryName = data.CategoryName;
-                        model.Image = data.Image;
-                        model.BrandId = data.BrandId;
+                        ViewBag.BrandName = data.BrandName;
+                        ViewBag.Image = data.Image;
                         ViewBag.btnText = "UPDATE";
                         ViewBag.Heading = "Update Category";
 
@@ -407,7 +412,7 @@ namespace RR_Remote.Areas.Admin.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Category(CategoryDTO model, IFormCollection model1)
+        public async Task<IActionResult> Category(BrandDTO model, IFormCollection model1)
         {
             try
             {
@@ -424,7 +429,7 @@ namespace RR_Remote.Areas.Admin.Controllers
 
                     model.Image = uploadResult;
                 }
-                bool isCreated = await _home.AddUpdateCategory(model);
+                bool isCreated = await _home.AddUpdateBrand(model);//category
                 if (isCreated)
                 {
                     TempData["msg"] = model.Id > 0
@@ -471,6 +476,20 @@ namespace RR_Remote.Areas.Admin.Controllers
             {
                 var data = await _home.GetUsers();
                 return View(data);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<IActionResult> OrderHistory()
+        {
+            try
+            {
+                var model = new OrderDTO();
+                model.OrderLists = await _home.GetOrders();
+                return View(model);
             }
             catch (Exception)
             {
